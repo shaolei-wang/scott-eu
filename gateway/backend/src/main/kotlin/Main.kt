@@ -9,11 +9,15 @@ import org.zeromq.ZMQ
  * @since   FIXME
  */
 
-fun main() {
+const val PULL_PORT = 5557
+const val BIND_ADDR = "tcp://127.0.0.1:$PULL_PORT"
+
+fun main(args: Array<String>) {
+    println("Pulling from $BIND_ADDR")
     ZContext().use { context ->
         // Socket to talk to clients
-        val socket = context.createSocket(ZMQ.REP)
-        socket.bind("tcp://*:5555")
+        val socket = context.createSocket(ZMQ.PULL)
+        socket.connect(BIND_ADDR)
 
         while (!Thread.currentThread().isInterrupted) {
             // Block until a message is received
