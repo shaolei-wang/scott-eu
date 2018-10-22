@@ -20,25 +20,25 @@ fun main(args: Array<String>) {
     val mapper = ObjectMapper().registerKotlinModule()
     ZContext().use { context ->
         // Socket to talk to clients
-        val socket = context.createSocket(ZMQ.PULL)
+        val socket = context.createSocket(ZMQ.DEALER)
+        // only one node binds, the rest connect
         socket.connect(CONNECT_ADDR)
 
         while (!Thread.currentThread().isInterrupted) {
             // Block until a message is received
             val reply = socket.recv(0)
-
-            // Print the message
             val rcvMessage = String(reply, ZMQ.CHARSET)
+
             // Uncomment the line below if you want to see raw JSON
 //            println("Received: '$rcvMessage'")
-
             // show how Jackson can automatically map the JSON to a Kotlin class
             val msg = mapper.readValue<WorkerMessage>(reply)
             println("Worker number: ${msg.num}")
 
-            // Can't send a response over
-//            val response = "Hello, world!"
-//            socket.send(response.toByteArray(ZMQ.CHARSET), 0)
+            // ZMQ.DEALER mode allows us to use the socket bidirectionally w/o blocking
+            // but has limits on buffers (1000 msg approx)
+            val response = "{\"id\": 1, \"status\": \"SUCCESS\"}";
+            socket.send(response.toByteArray(ZMQ.CHARSET), 0)
         }
     }
 
