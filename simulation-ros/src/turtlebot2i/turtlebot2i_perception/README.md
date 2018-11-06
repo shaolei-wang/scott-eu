@@ -44,13 +44,15 @@ $ sudo pip3 install mrcnn
 $ patch /usr/local/lib/python3.5/dist-packages/mask_rcnn-2.1-py3.5.egg misc/mask_rcnn-2.1-py3.5.egg.patch
 ```
 
-# 4. Download the pretrained MRCNN models (TODO)
-```
+6. Download the pretrained MRCNN models (TODO)
 
 ```
+$ wget https://www.dropbox.com/s/xunaa1idwcmdyz5/coco_vrepall_1002.h5 -P models
+$ wget https://www.dropbox.com/s/5foyklp3azy2wi0/mask_rcnn_coco.h5  -P models
+```
 
 
-# 5. Run the Mask R-CNN
+7. Run the Mask R-CNN
 
 ```
 $ rosrun turtlebot2i_perception ros_mrcnn.py
